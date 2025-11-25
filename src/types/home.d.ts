@@ -9,3 +9,12 @@ export type BannerItem = {
   /** 跳转类型 */
   type: number
 }
+/** 首页-分类面板数据类型 */
+export type CategoryItem = {
+  /** 展示图标 */
+  icon: string
+  /** id */
+  id: string
+  /** 分类名称 */
+  name: string
+}
