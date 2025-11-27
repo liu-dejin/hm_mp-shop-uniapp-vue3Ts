@@ -5,6 +5,7 @@ import type { CategoryTopItem } from '@/types/category'
 import type { BannerItem } from '@/types/home'
 import { onLoad } from '@dcloudio/uni-app'
 import { computed, ref } from 'vue'
+import PageSkeleton from './component/PageSkeleton.vue'
 
 // 获取轮播图数据
 const bannerList = ref<BannerItem[]>([])
@@ -12,6 +13,7 @@ const getBannerData = async () => {
   const res = await getHomeBannerApi(2)
   bannerList.value = res.result
 }
+
 // 获取分类列表数据
 const categoryList = ref<CategoryTopItem[]>([])
 const activeIndex = ref(0)
@@ -19,10 +21,12 @@ const getCategoryTopData = async () => {
   const res = await getCategoryTopApi()
   categoryList.value = res.result
 }
+// 数据是否加载完毕
+const isFinish = ref(false)
 // 页面加载
-onLoad(() => {
-  getBannerData()
-  getCategoryTopData()
+onLoad(async () => {
+  await Promise.all([getBannerData(), getCategoryTopData()])
+  isFinish.value = true
 })
 
 // 提取二级分类列表数据
@@ -30,7 +34,7 @@ const subCategoryList = computed(() => categoryList.value[activeIndex.value]?.ch
 </script>
 
 <template>
-  <view class="viewport">
+  <view class="viewport" v-if="isFinish">
     <!-- 搜索框 -->
     <view class="search">
       <view class="input">
@@ -81,6 +85,7 @@ const subCategoryList = computed(() => categoryList.value[activeIndex.value]?.ch
       </scroll-view>
     </view>
   </view>
+  <PageSkeleton v-else />
 </template>
 
 <style lang="scss">
