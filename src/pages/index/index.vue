@@ -7,7 +7,7 @@ import PageSkeleton from './components/PageSkeleton.vue'
 import { ref } from 'vue'
 import { onLoad } from '@dcloudio/uni-app'
 import type { BannerItem, CategoryItem, HotItem } from '@/types/home'
-import type { XtxGuessInstance } from '@/types/component'
+import { useGuessList } from '@/composables'
 // 获取轮播图数据
 const bannerList = ref<BannerItem[]>([])
 const getHomeBannerData = async () => {
@@ -26,12 +26,8 @@ const getHomeHotData = async () => {
   const res = await getHomeHotApi()
   hotList.value = res.result
 }
-
-const guessRef = ref<XtxGuessInstance>()
-// 滚动触底
-const onScrolltoLower = async () => {
-  guessRef.value?.getMore()
-}
+// 猜你喜欢分页加载
+const { guessRef, onScrolltolower } = useGuessList()
 const isTriggered = ref(false)
 const isloading = ref(false)
 // 下拉刷新
@@ -64,7 +60,7 @@ onLoad(async () => {
     refresher-enabled
     :refresher-triggered="isTriggered"
     @refresherrefresh="onRefresherrefresh"
-    @scrolltolower="onScrolltoLower"
+    @scrolltolower="onScrolltolower"
     class="scroll-view"
     scroll-y
   >

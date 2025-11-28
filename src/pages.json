@@ -95,5 +95,38 @@
 				"selectedIconPath": "static/tabs/user_selected.png"
 			}
 		]
+	},
+	// 子包配置
+	"subPackages": [
+		{
+			// 子包根目录
+			"root": "pagesMember",
+			// 页面路径和窗口表现
+			"pages": [
+				{
+					"path": "settings/settings",
+					"style": {
+						"navigationBarTitleText": "设置"
+					}
+				},
+				{
+					"path": "profile/profile",
+					"style": {
+						"navigationBarTitleText": "个人信息页",
+						"navigationStyle": "custom",
+						"navigationBarTextStyle": "white"
+					}
+				}
+			]
+		}
+	],
+	// 分包预下载
+	"preloadRule": {
+		"pages/my/my": {
+			"network": "all",
+			"packages": [
+				"pagesMember"
+			]
+		}
 	}
 }
