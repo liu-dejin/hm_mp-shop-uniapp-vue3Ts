@@ -17,7 +17,7 @@ export const getMemberProfileApi = () =>
  */
 
 export const PutMemberProfileApi = (data: ProfileParams) =>
-  http({
+  http<ProfileDetail>({
     method: 'PUT',
     url: '/member/profile',
     data,
