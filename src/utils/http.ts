@@ -3,7 +3,7 @@ import { useMemberStore } from '@/stores'
 /**
  *
  */
-const baseURL = 'https://pcapi-xiaotuxian-front.itheima.net'
+const baseURL = 'https://pcapi-xiaotuxian-front-devtest.itheima.net'
 //拦截器
 const httpInterceptor = {
   invoke(options: UniApp.RequestOptions) {
