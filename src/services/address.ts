@@ -22,10 +22,21 @@ export const getMemberAddressApi = () =>
 
 /**
  * 获取收获详细地址
- * @params id: 地址id
+ * @param id: 地址id
  */
 export const getMemberAddressByIdApi = (id: string) =>
   http<AddressItem>({
     method: 'GET',
     url: `/member/address/${id}`,
+  })
+/**
+ * 修改收获详细地址
+ * @param id 地址id(路径参数)
+ * @param data 表单数据(请求体参数)
+ */
+export const putMemberAddressByIdApi = (id: string, data: AddressParams) =>
+  http({
+    method: 'PUT',
+    url: `/member/address/${id}`,
+    data,
   })

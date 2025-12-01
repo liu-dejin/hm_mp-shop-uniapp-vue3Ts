@@ -1,5 +1,9 @@
 <script setup lang="ts">
-import { getMemberAddressByIdApi, postMemberAddressApi } from '@/services/address'
+import {
+  getMemberAddressByIdApi,
+  postMemberAddressApi,
+  putMemberAddressByIdApi,
+} from '@/services/address'
 import { onLoad } from '@dcloudio/uni-app'
 import { ref } from 'vue'
 
@@ -54,10 +58,12 @@ onLoad(() => {
 })
 // 提交表单
 const onSubmit = async () => {
-  await postMemberAddressApi(form.value)
+  query.id
+    ? await putMemberAddressByIdApi(query.id, form.value)
+    : await postMemberAddressApi(form.value)
   uni.showToast({
     icon: 'success',
-    title: '添加成功',
+    title: `${query.id ? '编辑' : '新增'}成功`,
   })
   setTimeout(() => {
     uni.navigateBack()
