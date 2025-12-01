@@ -3,6 +3,7 @@ import { getMemberProfileApi, PutMemberProfileApi } from '@/services/profile'
 import { useMemberStore } from '@/stores'
 import type { Gender, ProfileDetail } from '@/types/member'
 import { onLoad } from '@dcloudio/uni-app'
+
 import { ref } from 'vue'
 
 // 获取屏幕边界到安全区域距离
