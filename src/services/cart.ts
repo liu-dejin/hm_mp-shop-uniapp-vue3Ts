@@ -36,3 +36,15 @@ export const putMemberCartApi = (skuId: string, data: { selected?: boolean; coun
     url: `/member/cart/${skuId}`,
     data,
   })
+
+/**
+ * 购物车全选/取消全选
+ * @param data selected 是否选中
+ */
+export const putMemberCartSelectedApi = (data: { selected: boolean }) => {
+  return http({
+    method: 'PUT',
+    url: '/member/cart/selected',
+    data,
+  })
+}

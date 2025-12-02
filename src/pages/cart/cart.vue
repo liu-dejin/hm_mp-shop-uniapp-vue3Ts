@@ -1,10 +1,15 @@
 <script setup lang="ts">
 import type { InputNumberBoxEvent } from '@/components/vk-data-input-number-box/vk-data-input-number-box'
-import { delectMemberCartApi, getMemberCartApi, putMemberCartApi } from '@/services/cart'
+import {
+  delectMemberCartApi,
+  getMemberCartApi,
+  putMemberCartApi,
+  putMemberCartSelectedApi,
+} from '@/services/cart'
 import { useMemberStore } from '@/stores'
 import type { CartItem } from '@/types/cart'
 import { onShow } from '@dcloudio/uni-app'
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 
 // 获取会员store
 const memberStore = useMemberStore()
@@ -38,10 +43,32 @@ const onDelectCart = (skuId: string) => {
 
 // 修改商品数量
 const onChangeCount = async (ev: InputNumberBoxEvent) => {
-  console.log(ev)
   const { index, value } = ev
   await putMemberCartApi(index, { count: value })
-  getMemberCartData()
+}
+
+// 修改选中状态 单品修改
+const onChangeSelect = (item: CartItem) => {
+  // 选中状态取反
+  item.selected = !item.selected
+  // 后端数据更新
+  putMemberCartApi(item.skuId, { selected: item.selected })
+}
+
+// 计算底部全选状态
+const isSelectedAll = computed(
+  () => cartList.value.length && cartList.value.every((v) => v.selected),
+)
+
+// 修改全选选中状态
+const onChangeSelectAll = async () => {
+  // 前端更新
+  const _isSelectedAll = !isSelectedAll.value
+  cartList.value.forEach((item) => {
+    item.selected = _isSelectedAll
+  })
+  // 提交后端
+  await putMemberCartSelectedApi({ selected: _isSelectedAll })
 }
 </script>
 
@@ -63,7 +90,11 @@ const onChangeCount = async (ev: InputNumberBoxEvent) => {
             <!-- 商品信息 -->
             <view class="goods">
               <!-- 选中状态 -->
-              <text class="checkbox" :class="{ checked: item.selected }"></text>
+              <text
+                @tap="onChangeSelect(item)"
+                class="checkbox"
+                :class="{ checked: item.selected }"
+              ></text>
               <navigator
                 :url="`/pages/goods/goods?id=${item.id}`"
                 hover-class="none"
@@ -106,7 +137,7 @@ const onChangeCount = async (ev: InputNumberBoxEvent) => {
       </view>
       <!-- 吸底工具栏 -->
       <view class="toolbar">
-        <text class="all" :class="{ checked: true }">全选</text>
+        <text class="all" @tap="onChangeSelectAll" :class="{ checked: isSelectedAll }">全选</text>
         <text class="text">合计:</text>
         <text class="amount">100</text>
         <view class="button-grounp">
