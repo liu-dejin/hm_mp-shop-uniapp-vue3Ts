@@ -1,8 +1,33 @@
 <script setup lang="ts">
+import { getMemberAddressApi } from '@/services/address'
+import { useAddressStore } from '@/stores'
+import type { AddressItem } from '@/types/address'
+import { onMounted, ref } from 'vue'
+
 // 子调父
 const emit = defineEmits<{
   close: []
 }>()
+
+// 获取收货地址
+const addressList = ref<AddressItem[]>()
+const getMemberAddressData = async () => {
+  const res = await getMemberAddressApi()
+  addressList.value = res.result
+}
+// 页面加载
+onMounted(() => {
+  getMemberAddressData()
+})
+// 把 getMemberAddressData 暴露给父组件，父组件可在抽屉打开时调用
+defineExpose({ getAdd: getMemberAddressData })
+
+// 选择地址
+const addressStore = useAddressStore()
+const selectAddress = (item: AddressItem) => {
+  addressStore.changeSelectAddress(item)
+  emit('close')
+}
 </script>
 
 <template>
@@ -13,20 +38,14 @@ const emit = defineEmits<{
     <view class="title">配送至</view>
     <!-- 内容 -->
     <view class="content">
-      <view class="item">
-        <view class="user">李明 13824686868</view>
-        <view class="address">北京市顺义区后沙峪地区安平北街6号院</view>
-        <text class="icon icon-checked"></text>
-      </view>
-      <view class="item">
-        <view class="user">王东 13824686868</view>
-        <view class="address">北京市顺义区后沙峪地区安平北街6号院</view>
-        <text class="icon icon-ring"></text>
-      </view>
-      <view class="item">
-        <view class="user">张三 13824686868</view>
-        <view class="address">北京市朝阳区孙河安平北街6号院</view>
-        <text class="icon icon-ring"></text>
+      <view class="item" v-for="item in addressList" :key="item.id">
+        <view class="user">{{ item.receiver }} {{ item.contact }}</view>
+        <view class="address">{{ item.fullLocation }} {{ item.address }}</view>
+        <text
+          class="icon"
+          :class="item.id === addressStore.selectedAddress?.id ? 'icon-checked' : 'icon-ring'"
+          @tap="selectAddress(item)"
+        ></text>
       </view>
     </view>
     <view class="footer">
