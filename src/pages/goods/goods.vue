@@ -4,8 +4,8 @@ import { getGoodsByIdApi } from '@/services/goods'
 import type { GoodsResult } from '@/types/goods'
 import { onLoad } from '@dcloudio/uni-app'
 import { computed, ref } from 'vue'
-import ServicePanel from './component/ServicePanel.vue'
-import AddressPanel from './component/AddressPanel.vue'
+import ServicePanel from './components/ServicePanel.vue'
+import AddressPanel from './components/AddressPanel.vue'
 import type {
   SkuPopupEvent,
   SkuPopupInstance,

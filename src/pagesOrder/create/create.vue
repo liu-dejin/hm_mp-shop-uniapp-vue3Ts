@@ -1,5 +1,10 @@
 <script setup lang="ts">
-import { getMemberOrderPreApi, getMemberOrderPreNowApi, postMemberOrderApi } from '@/services/order'
+import {
+  getMemberOrderPreApi,
+  getMemberOrderPreNowApi,
+  getMemberOrderRepurchaseByIdAPI,
+  postMemberOrderApi,
+} from '@/services/order'
 import { useAddressStore } from '@/stores'
 import type { OrderPreResult } from '@/types/order'
 import { onLoad } from '@dcloudio/uni-app'
@@ -29,6 +34,7 @@ const query = defineProps<{
   skuId?: string
   count?: string
   addressId?: string
+  orderId?: string // 再次购买订单id
 }>()
 
 // 获取订单信息
@@ -40,6 +46,10 @@ const getMemberOrderPreData = async () => {
       skuId: query.skuId,
       addressId: query.addressId,
     })
+    preOrder.value = res.result
+  } else if (query.orderId) {
+    // 再次购买
+    const res = await getMemberOrderRepurchaseByIdAPI(query.orderId)
     preOrder.value = res.result
   } else {
     const res = await getMemberOrderPreApi()
